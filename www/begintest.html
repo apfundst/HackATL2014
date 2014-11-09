@@ -1,0 +1,156 @@
+
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+</head>
+<body>
+	<center>
+		<h3 id="timer"><time>00:00:00</time></h3>
+	
+	<div class="container">
+		<div class="well">
+			<div class="col-md-12" id ="buttoncontainer">
+				<button id="randomNumber" type="button" class="btn btn-default" style="width:80%; height:60%; font-size:48pt"></button>
+				<button id="number1" type="button" class="btn btn-default" onclick="answerClick(1)" style="display:none; width:80%; height:20%;"></button>
+				<button id="number2" type="button" class="btn btn-default" onclick="answerClick(2)" style="display:none; width:80%; height:20%;"></button>
+				<button id="number3" type="button" class="btn btn-default" onclick="answerClick(3)" style="display:none; width:80%; height:20%;"></button>
+				<button id="number4" type="button" class="btn btn-default" onclick="answerClick(4)" style="display:none; width:80%; height:20%;"></button>
+				<div id="userTimeList" class="list-group"  style="display:none;">
+				  <a class="list-group-item active">Your Time</a>
+				  <a id="userTime" class="list-group-item"></a>
+				</div>			
+			</div>
+		</div>
+	</div>
+	</center>
+</body>
+
+<script>
+window.onload = generateRandomNumberMemory;
+function generateRandomNumberMemory(){
+	var n = 25;
+	var number = Math.floor(Math.random()*n)+1;
+	document.getElementById("randomNumber").innerHTML = number;
+} 
+function generateRandomNumber(curNum){
+	var n = 25;
+	var number = Math.floor(Math.random()*n)+1;
+	if(number == curNum)
+		number++;
+	document.getElementById("number1").innerHTML = number;
+	var number = Math.floor(Math.random()*n)+1;
+	if(number == curNum)
+		number++;
+	document.getElementById("number2").innerHTML = number;
+	var number = Math.floor(Math.random()*n)+1;
+	if(number == curNum)
+		number++;
+	document.getElementById("number3").innerHTML = number;
+	var number = Math.floor(Math.random()*n)+1;
+	if(number == curNum)
+		number++;
+	document.getElementById("number4").innerHTML = number;
+} 
+
+var h1 = document.getElementsByTagName('h3')[0],
+    seconds = 0, minutes = 0, hours = 0, switchtimer = 0,
+    t, showNextSet = 1, totalCorrect = 0, testComplete = 0;
+
+function add() {
+    seconds++;
+    switchtimer++;
+    if (seconds >= 60) {
+        seconds = 0;
+        minutes++;
+        if (minutes >= 60) {
+            minutes = 0;
+            hours++;
+        }
+    }
+    
+    h1.textContent = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
+
+	if(switchtimer > 2  && showNextSet === 1 )
+	{
+		switchtimer = 0;
+		showNextSet = 0;
+		currentNumber = document.getElementById("randomNumber").innerHTML;
+		console.log(currentNumber);
+		document.getElementById("randomNumber").style.display="none";
+		
+		generateRandomNumber(currentNumber);
+		
+		document.getElementById("number1").style.display="block";
+		document.getElementById("number2").style.display="block";
+		document.getElementById("number3").style.display="block";
+		document.getElementById("number4").style.display="block";
+		
+		var r = 4;
+		var randomButton = Math.floor(Math.random()*r)+1;
+		document.getElementById("number"+randomButton).innerHTML = currentNumber;
+	}
+		
+    timer();
+}
+function timer() {
+	if(testComplete == 0)
+		t = setTimeout(add, 1000);
+		
+}
+timer();
+
+function answerClick(element){
+	if(currentNumber === document.getElementById("number"+element).innerHTML)
+	{
+		document.getElementById("number1").style.display="none";
+		document.getElementById("number2").style.display="none";
+		document.getElementById("number3").style.display="none";
+		document.getElementById("number4").style.display="none";
+		generateRandomNumberMemory();
+		document.getElementById("randomNumber").style.display="block";
+		switchtimer = 0;
+		showNextSet = 1;
+		totalCorrect++;
+	}
+	else
+	{
+		document.getElementById("number1").style.display="none";
+		document.getElementById("number2").style.display="none";
+		document.getElementById("number3").style.display="none";
+		document.getElementById("number4").style.display="none";
+		generateRandomNumberMemory();
+		document.getElementById("randomNumber").style.display="block";
+		switchtimer = 0;
+		showNextSet = 1;
+		seconds=0;
+		totalCorrect=0;
+	}
+	
+	if(totalCorrect === 1)
+	{
+		document.getElementById("number1").style.display="none";
+		document.getElementById("number2").style.display="none";
+		document.getElementById("number3").style.display="none";
+		document.getElementById("number4").style.display="none";
+		document.getElementById("randomNumber").style.display="none";
+
+		document.getElementById("userTimeList").style.display="block";
+		
+		document.getElementById("userTime").innerHTML = h1.textContent;
+		
+		showNextSet = 0;
+		
+		testComplete = 1;
+		
+		document.getElementById("timer").style.visibility = "hidden";
+
+	}
+	
+	
+}
+
+</script>
+</html>
